@@ -1,0 +1,168 @@
+
+
+Find a way to give IdentifierExpression an offset, make parse functions member
+functions of something, store starting stack size for each BlockStatement.
+
+quad func(quad a, quad b)
+{ # starting stack size is 0
+    quad x;
+    { # starting stack size is 8
+        quad y;
+        { # starting stack size is 16
+            y = 12;
+        }
+        quad z;
+        { # starting stack size is 24
+            x = z + y;
+            { # starting stack size is 24
+                idk;
+            }
+        }
+    }
+}
+
+A BlockStatement can find out its starting stack size by walking the parent
+BlockStatement statement list and counting how many VariableDeclaration there
+are and adding that sum to the parents starting stack size.  It should start
+walking from where the current block statement is declared and it should walk
+backwards until it hits the begining of the parent BlockStatement's statement
+list.
+
+VariableDeclarations will have to walk backwards and count other variable
+declarations in the same way.
+
+IdentifierExpressions will have to know what BlockStatement it is in and where
+in that BloclStatement it is.  A pointer to the block statement and an index
+will do.
+
+BlockStatements will now need to have a non owning pointer to the BlockStatement
+it resides in, BlockStatements that serve as a function body will have their
+parent pointer point to null.
+
+
+{
+    quad x;
+
+    y = x;
+
+    quad x;
+}
+
+'y = x' will need to know it is refering to the first x declaration not the second
+
+
+{
+    quad x;
+    quad x;
+
+    y = x;
+}
+
+'y = x' will need to know it is refering to the second x declaration not the first
+
+
+
+
+At the end of a BlockStatement you need to pop any variables declared in that
+scope off the stack.  You could set rsp to rbp + whatever the BlockStatement's
+starting stack size.
+
+movq %rbp, %rsp
+subq `BlockStatement::m_startingStackSize`, $rsp
+
+Or you could just add a number from rsp but I'm not sure what that number is
+yet.
+
+
+
+
+Continue and Break statements:
+
+SourceFile will have two stacks of labels, one for where continue will go to and
+one for where break will go to.  Every time the parser encounters a new loop it
+will push the begin and end labels onto the two stacks and when it is done with
+the loop it will pop them off.  When a continue or break statement is
+encountered it will do an unconditional jump to the label at the top of the one
+of the stacks, depending on if it's a continue or a break.
+
+
+
+
+Return statement:
+
+Return statements will be easy to do, you just need to move the given value to
+rax, cleanup the stack, and do a ret.
+
+As of right now, the function returns properly when it gets to the end of the
+function.  Whatever the last value the function evaluated is, will be put in rax
+and usable by the caller.  Not a great system, but it's only temporary.
+
+
+
+
+Function calls:
+
+Remember to 16 byte align the stack before calling a function.
+It can be done like this:
+
+andq $-16, %rsp
+
+You may need to save rsp before anding it and restore it after the function call
+
+pushq %rsp
+andq $-16, %rsp
+callq _func
+popq %rsp
+
+^^this needs to be tested before it's implemented
+
+
+
+
+Do now
+------
+
+[x] equality and inequality operator
+
+[x] logical or operator
+
+[x] make not operator
+
+[x] make continue/break work
+
+[x] make parentheses in expressions work
+
+[x] fix function arguments
+
+[x] make types class
+
+[ ] implement types class
+
+[ ] char type
+
+[ ] size of operator
+
+[ ] make return statement work
+
+[ ] make pointer type
+
+[ ] make struct type
+
+
+
+
+
+
+Don't do for a while
+--------------------
+
+bitwise operators
+stack arrays
+unions
+compound assignment
+comma operator
+unary plus
+type cast
+ternary operator
+
+

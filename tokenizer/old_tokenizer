@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+
+import re
+
+BINARY_OPERATORS = [
+    '+',
+    '-',
+    '*',
+    '/',
+    '%',
+    '=',
+    '&',
+    '^',
+    '|',
+    '&&',
+    '||',
+    '<',
+    '>',
+    '<=',
+    '>=',
+    '==',
+    '!='
+]
+
+UNARY_OPERATORS = [
+    '+',
+    '-',
+    '!',
+    '~',
+    '*',
+    '&',
+    '++',
+    '--'
+]
+
+POSTFIX_OPERATORS = [
+    '++',
+    '--'
+]
+
+
+
+FILE_NAME = "../tests/test.c"
+
+token_list = list()
+
+with open(FILE_NAME, 'r') as file:
+    contents = file.read()
+    temp_list = re.split(' ', contents)
+    for i, item in enumerate(temp_list):
+        s1 = item.strip()
+        for s2 in re.split('[:+-*/&^|=%()]', s1):
+            if s2:
+                token_list.append(s)
+
+
+for token in token_list:
+    print(token)
+
+

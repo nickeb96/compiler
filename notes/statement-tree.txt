@@ -1,0 +1,20 @@
+
+statement {
+
+BaseStatement
+    TokenListStatement
+    Statement
+        SingleStatement: Expression expression;
+        BlockStatement: std::vector<Statement> statements;
+        ControlStatement: Expression condition;
+            IfElseStatement: Statement ifBody; Statement elseBody;
+            WhileStatement: Statement loopBody;
+            DoWhileStatement: Statemnet loopBody;
+        VarDeclStatement: int size; std::string name; int offset;
+        SpecialStatement:
+            ReturnStatement: Expression expression;
+            ContinueStatement
+            BreakStatement
+
+}
+

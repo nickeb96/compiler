@@ -1,0 +1,256 @@
+
+
+returns rvalue only:
+binary:
++
+-
+*
+/
+=
+==
+!=
+<
+>
+<=
+>=
+unary:
+&
+-
++
+leaf expression:
+literal
+
+returns lvalue:
+unary:
+*
+leaf expression:
+variable
+
+
+the side that gets evaluated first should push its return onto the stack instead of into rbx
+
+
+x + y
+#code gen for x
+push rax
+#code gen for y
+pop rbx
+add rax rbx
+mov rbx rax
+
+
+x (as rvalue which is default)
+#code gen for x (as lvalue)
+mov (rax) rax
+
+
+x (as lvalue) if local variable on stack
+mov rbp rax
+sub offset rax
+#address of x is in rax
+
+
+3
+mov 3 rax
+
+
+x = y (x must be an lvalue)
+#code gen for y
+push rax
+#code gen for x (as lvalue)
+pop rbx
+mov rbx (rax)
+mov rbx rax
+#returns the value of x
+
+
+&x
+#code gen for x (as lvalue)
+returns the address of x
+
+
+*x (as lvalue)
+#code gen for x (as rvalue)
+#returns the address pointed to by x
+
+
+*x (as rvalue)
+#code gen for x (as rvalue)
+mov (rax) rax
+#returns the value at the address pointed to by x
+
+
+int x; if local variable
+sub 8 rsp
+
+
+
+
+
+
+
+
+
+
+y = 3 * x + 5
+
+
+     =
+    / \
+   y   +
+      / \
+     *   5
+    / \
+   3   x
+
+
+#first try
+mov 3 rax
+mul x rax
+add 5 rax
+mov rax y
+
+
+int x = 7;
+int y = 8;
+-8(rbp) is x
+-16(rbp) is y
+
+
+#third try
+mov 3 rax
+mov rbp rbx
+sub 8 rbx
+mul (rbx) rax
+idk
+
+
+#fourth try
+#3
+mov 3 rax
+#*
+mov rax rbx
+#x
+mov -8(rbp) rax
+#*
+mul rax rbx
+mov rbx rax
+#+
+mov rax rbx
+#5
+mov 5 rax
+#+
+add rax rbx
+mov rbx rax
+#=
+mov rax rbx
+#y
+mov rbp rax
+sub 16 rax
+#=
+mov rbx (rax)
+mov (rax) rax
+
+
+
+
+
+
+
+
+y = 5 - 6 / 3
+
+
+     =
+    / \
+   y   -
+      / \
+     5   ÷
+        / \
+       6   3
+
+
+mov 6 rax
+div 3 rax
+sub 1 rax
+mov rax y
+
+
+
+
+
+*(array + y - 1) = 5 * x + 3 * z
+
+
+              =
+            /   \
+           /     \
+          /       \
+         /         \
+        *           +
+        |         /   \
+        -        *     *
+       / \      / \   / \
+      +   1    5   x 3   z
+     / \
+    a   y
+
+
+
+
+#=
+#code gen for rhs
+    #+
+        #*
+            #5
+            mov 5 rax
+        mov rax rbx
+            #x
+            mov rbp rax
+            sub x_offset rax
+            mov (rax) rax
+        mul rax rbx
+        mov rbx rax
+    mov rax rbx
+        #*
+            #3
+            mov 3 rax
+        mov rax rbx
+            #z
+            mov rbp rax
+            sub z_offset rax
+            mov (rax) rax
+        mul rax rbx
+        mov rbx rax
+    add rax rbx
+    mov rbx rax
+mov rax rbx
+#code gen for lhs (as lvalue)
+    #*
+        #-
+            #+
+                #a
+                mov rbp rax
+                sub a_offset rax
+                mov (rax) rax
+            mov rax rbx
+                #y
+                mov rbp rax
+                sub y_offset rax
+                mov (rax) rax
+            add rax rbx
+            mov rbx rax
+        mov rax rbx
+            #1
+            mov 1 rax
+        sub rax rbx
+        mov rbx rax
+mov rbx (rax)
+mov rbx rax
+
+
+
+
+
+
+

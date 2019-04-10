@@ -1,0 +1,11 @@
+Right now you have every expression place its value in %rax and you use the
+stack exclusively for temp store.  This is simple, but extremely inefficient.
+
+What you should do instead is make it so you can specify where an expression
+places its value via another argument to the Expression::assembly function.
+This way you are not limited to only having operators and expressions put their
+result in rax.
+
+You also need to make it so that while generating assembly, each function has a
+table that keeps track of which registers are used or not in order for this
+optimization to work.

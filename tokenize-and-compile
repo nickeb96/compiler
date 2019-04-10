@@ -1,0 +1,10 @@
+#!/bin/sh
+
+PROJECT_ROOT="$( cd "$( dirname "$0" )" && pwd )"
+
+if [ $# -eq 1 ]; then
+    "$PROJECT_ROOT"/tokenizer/tokenizer $1 | "$PROJECT_ROOT"/src/ncc - > "${1}.s"
+else
+    echo 'Usage: ./run <file.c>'
+fi
+

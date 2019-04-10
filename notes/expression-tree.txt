@@ -1,0 +1,43 @@
+
+namespace expression {
+
+BaseExpression
+    RawTokenExpression: string token
+    Expression
+        OperatorExpression: string operatorSymbol;
+            PostfixOperator: Expression left;
+                SubscriptOperator: Expression index;
+                PostIncrementOperator
+                FunctionCallOperator: vector<Expression> arguments;
+            UnaryOperator: Expression right;
+                AddressOfOperator
+                DereferenceOperator
+                NegationOperator
+                PreIncrementOperator
+            BinaryOperator: Expression left; Expression right;
+                AdditionOperator
+                MultiplicationOperator
+                AssignmentOperator
+            TernaryOperator: Expression condition; Expresison true; Expression false;
+                QuestionMarkOperator
+        LeafExpression
+            LiteralExpression: string value;
+                IntegerLiteral
+                StringLiteral
+            IdentifierExpression: string name;
+
+}
+
+left to right operators use forward iterators
+right to left operators use reverse iterators
+
+
+functions:
+std::string toString() const
+std::string assembly() const
+std::string assemblyAsLvalue() const
+
+
+
+
+

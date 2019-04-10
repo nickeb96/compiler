@@ -1,0 +1,35 @@
+
+Class Hierarchy
+---------------
+
+
+Expression:
+    OperatorExpression:
+        BinaryExpression: leftExpression(Expression*), rightExpression(Expression*)
+            AdditionExpression:
+            AssignmentExpression:
+        UnaryExpression: expression(Expression*)
+            NegateExpression:
+    SingleExpression:
+        IntegerLiteralExpression: value(string)
+        IdentifierExpression: name(string)
+    SpecialExpression:
+        FunctionCallExpression: name(string), parameterList(vector<Expression*>)
+    NopExpression:
+
+
+Statement:
+    SingleStatement: expression(Expression*)
+    BlockStatement: statements(vector<Statement*>)
+    ControlStatement: condition(Expression*)
+        IfElseStatement: ifBody(Statement*), elseBody(Statement*)
+        WhileStatement: loopBody(Statement*)
+    SpecialStatement:
+        BreakStatement:
+        ContinueStatement:
+        ReturnStatement: expression(Expression*)
+    FunctionDeclarationStatement: name(string), type(string), parameterList(vector<string>)
+    VariableDeclarationStatemnet: name(string), type(string)
+
+
+

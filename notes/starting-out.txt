@@ -1,0 +1,49 @@
+
+
+to start out:
+spaces between every token
+only data type is long
+no main function
+all vars declared at top of function
+no for loop
+no do loop
+no switch statement
+only if else and while
+if else and while statements must be in code blocks
+no structs
+no enums
+no unions
+max of four parameters
+var declaration and initialization can't be on the same line
+no compound assignment expressions
+no bitwise operators
+no arrays
+no pointers
+only letters in identifiers
+no octal or hex literals
+
+
+
+parameter list order:
+RDI, RSI, RDX, RCX
+
+
+functions:
+tokenize string
+turn code block into BlockStatement
+turn single statement into expression tree
+
+
+operator precedence:
+
+1: postfix operators: () ++ -- []
+2: unary operators: - ! * &
+3: multiplicative operators: * / %
+4: additive operators: + -
+5: comparative operators: < <= > >=
+6: equality operators: == !=
+7: logical and: &&
+8: logical or: ||
+9: assignment: =
+
+
